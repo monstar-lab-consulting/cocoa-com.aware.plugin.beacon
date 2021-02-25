@@ -15,6 +15,12 @@
     <application
         android:allowBackup="true"
         android:supportsRtl="true">
+
+        <activity
+            android:name="com.aware.plugin.beacon.Settings"
+            android:exported="true"
+            android:label="AWARE: Beacon" />
+
         <service
             android:name="com.aware.plugin.beacon.syncadapters.Beacon_Sync"
             android:exported="true">
