@@ -25,63 +25,32 @@ import java.util.HashMap;
 public class Provider extends ContentProvider {
 
     public static final int DATABASE_VERSION = 7;
-
+    public static final String DATABASE_NAME = "beacon.db";
+    public static final String TABLE_NAME = "beacon";
+    public static final String[] DATABASE_TABLES = {
+            TABLE_NAME
+    };
+    //data type: 0-inferences, 1-features
+    public static final String[] TABLES_FIELDS = {
+            BeaconData._ID + " integer primary key autoincrement," +
+                    BeaconData.TIMESTAMP + " real default 0," +
+                    BeaconData.DEVICE_ID + " text default ''," +
+                    BeaconData.UUID + " text default ''," +
+                    BeaconData.MAJOR + " integer default ''," +
+                    BeaconData.MINOR + " integer default ''," +
+                    BeaconData.RSSI + " integer default ''," +
+                    BeaconData.TX_POWER + " integer default ''"
+    };
+    private static final int URI_CHECK_SCAN = 1;
+    private static final int URI_CHECK_SCAN_ID = 2;
     /**
      * Provider authority: com.aware.plugin.beacon.provider.beacon
      */
     public static String AUTHORITY = "com.aware.plugin.beacon.provider.beacon";
-
-    private static final int URI_CHECK_SCAN = 1;
-    private static final int URI_CHECK_SCAN_ID = 2;
-
-    public static final String DATABASE_NAME = "beacon.db";
-    public static final String TABLE_NAME = "beacon";
-
-    public static final String[] DATABASE_TABLES = {
-            TABLE_NAME
-    };
-
-    public static final class Beacon_Data implements BaseColumns {
-        private Beacon_Data() {
-        }
-
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.aware.plugin.beacon";
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.ANY_CURSOR_ITEM_TYPE + "/vnd.aware.plugin.beacon";
-
-        public static final String _ID = "_id";
-        public static final String TIMESTAMP = "timestamp";
-        public static final String DEVICE_ID = "device_id";
-        public static final String UUID = "uuid";
-        public static final String MAJOR = "major";
-        public static final String MINOR = "minor";
-        public static final String RSSI = "rssi";
-        public static final String TX_POWER = "tx_power";
-    }
-
-    //data type: 0-inferences, 1-features
-    public static final String[] TABLES_FIELDS = {
-            Beacon_Data._ID + " integer primary key autoincrement," +
-                    Beacon_Data.TIMESTAMP + " real default 0," +
-                    Beacon_Data.DEVICE_ID + " text default ''," +
-                    Beacon_Data.UUID + " text default ''," +
-                    Beacon_Data.MAJOR + " integer default ''," +
-                    Beacon_Data.MINOR + " integer default ''," +
-                    Beacon_Data.RSSI + " integer default ''," +
-                    Beacon_Data.TX_POWER + " integer default ''"
-    };
-
     private static UriMatcher uRIMatcher;
     private static HashMap<String, String> databaseMap;
-    private DatabaseHelper dbHelper;
     private static SQLiteDatabase database;
-
-    private void initialiseDatabase() {
-        if (dbHelper == null)
-            dbHelper = new DatabaseHelper(getContext(), DATABASE_NAME, null, DATABASE_VERSION, DATABASE_TABLES, TABLES_FIELDS);
-        if (database == null)
-            database = dbHelper.getWritableDatabase();
-    }
+    private DatabaseHelper dbHelper;
 
     /**
      * Returns the provider authority that is dynamic
@@ -91,6 +60,13 @@ public class Provider extends ContentProvider {
     public static String getAuthority(Context context) {
         AUTHORITY = context.getPackageName() + ".provider.beacon";
         return AUTHORITY;
+    }
+
+    private void initialiseDatabase() {
+        if (dbHelper == null)
+            dbHelper = new DatabaseHelper(getContext(), DATABASE_NAME, null, DATABASE_VERSION, DATABASE_TABLES, TABLES_FIELDS);
+        if (database == null)
+            database = dbHelper.getWritableDatabase();
     }
 
     @Override
@@ -103,14 +79,14 @@ public class Provider extends ContentProvider {
         uRIMatcher.addURI(AUTHORITY, DATABASE_TABLES[0] + "/#", URI_CHECK_SCAN_ID);
 
         databaseMap = new HashMap<>();
-        databaseMap.put(Beacon_Data._ID, Beacon_Data._ID);
-        databaseMap.put(Beacon_Data.TIMESTAMP, Beacon_Data.TIMESTAMP);
-        databaseMap.put(Beacon_Data.DEVICE_ID, Beacon_Data.DEVICE_ID);
-        databaseMap.put(Beacon_Data.UUID, Beacon_Data.UUID);
-        databaseMap.put(Beacon_Data.MAJOR, Beacon_Data.MAJOR);
-        databaseMap.put(Beacon_Data.MINOR, Beacon_Data.MINOR);
-        databaseMap.put(Beacon_Data.RSSI, Beacon_Data.RSSI);
-        databaseMap.put(Beacon_Data.TX_POWER, Beacon_Data.TX_POWER);
+        databaseMap.put(BeaconData._ID, BeaconData._ID);
+        databaseMap.put(BeaconData.TIMESTAMP, BeaconData.TIMESTAMP);
+        databaseMap.put(BeaconData.DEVICE_ID, BeaconData.DEVICE_ID);
+        databaseMap.put(BeaconData.UUID, BeaconData.UUID);
+        databaseMap.put(BeaconData.MAJOR, BeaconData.MAJOR);
+        databaseMap.put(BeaconData.MINOR, BeaconData.MINOR);
+        databaseMap.put(BeaconData.RSSI, BeaconData.RSSI);
+        databaseMap.put(BeaconData.TX_POWER, BeaconData.TX_POWER);
         return true;
     }
 
@@ -140,9 +116,9 @@ public class Provider extends ContentProvider {
     public String getType(Uri uri) {
         switch (uRIMatcher.match(uri)) {
             case URI_CHECK_SCAN:
-                return Beacon_Data.CONTENT_TYPE;
+                return BeaconData.CONTENT_TYPE;
             case URI_CHECK_SCAN_ID:
-                return Beacon_Data.CONTENT_ITEM_TYPE;
+                return BeaconData.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -159,10 +135,10 @@ public class Provider extends ContentProvider {
 
         switch (uRIMatcher.match(uri)) {
             case URI_CHECK_SCAN:
-                long beacon_id = database.insertWithOnConflict(DATABASE_TABLES[0], Beacon_Data.DEVICE_ID, values, SQLiteDatabase.CONFLICT_IGNORE);
+                long beacon_id = database.insertWithOnConflict(DATABASE_TABLES[0], BeaconData.DEVICE_ID, values, SQLiteDatabase.CONFLICT_IGNORE);
                 if (beacon_id > 0) {
                     Uri new_uri = ContentUris.withAppendedId(
-                            Beacon_Data.CONTENT_URI,
+                            BeaconData.CONTENT_URI,
                             beacon_id);
                     getContext().getContentResolver().notifyChange(new_uri, null, false);
                     database.setTransactionSuccessful();
@@ -227,5 +203,22 @@ public class Provider extends ContentProvider {
         database.endTransaction();
         getContext().getContentResolver().notifyChange(uri, null, false);
         return count;
+    }
+
+    public static final class BeaconData implements BaseColumns {
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.aware.plugin.beacon";
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.ANY_CURSOR_ITEM_TYPE + "/vnd.aware.plugin.beacon";
+        public static final String _ID = "_id";
+        public static final String TIMESTAMP = "timestamp";
+        public static final String DEVICE_ID = "device_id";
+        public static final String UUID = "uuid";
+        public static final String MAJOR = "major";
+        public static final String MINOR = "minor";
+        public static final String RSSI = "rssi";
+        public static final String TX_POWER = "tx_power";
+
+        private BeaconData() {
+        }
     }
 }

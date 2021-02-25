@@ -41,6 +41,14 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
     private static AWAREBeaconObserver beaconObserver;
     private BeaconManager beaconManager;
 
+    public static AWAREBeaconObserver getSensorObserver() {
+        return beaconObserver;
+    }
+
+    public static void setBeaconObserver(AWAREBeaconObserver observer) {
+        beaconObserver = observer;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -147,15 +155,15 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
                 if (beacons.size() > 0) {
                     for (Beacon b : beacons) {
                         ContentValues beaconInfo = new ContentValues();
-                        beaconInfo.put(Provider.Beacon_Data.TIMESTAMP, System.currentTimeMillis());
-                        beaconInfo.put(Provider.Beacon_Data.DEVICE_ID, Aware.getSetting(getApplicationContext(), Aware_Preferences.DEVICE_ID));
-                        beaconInfo.put(Provider.Beacon_Data.UUID, b.getId1().toString());
-                        beaconInfo.put(Provider.Beacon_Data.MAJOR, b.getId2().toString());
-                        beaconInfo.put(Provider.Beacon_Data.MINOR, b.getId3().toString());
-                        beaconInfo.put(Provider.Beacon_Data.RSSI, b.getRssi());
-                        beaconInfo.put(Provider.Beacon_Data.TX_POWER, b.getTxPower());
+                        beaconInfo.put(Provider.BeaconData.TIMESTAMP, System.currentTimeMillis());
+                        beaconInfo.put(Provider.BeaconData.DEVICE_ID, Aware.getSetting(getApplicationContext(), Aware_Preferences.DEVICE_ID));
+                        beaconInfo.put(Provider.BeaconData.UUID, b.getId1().toString());
+                        beaconInfo.put(Provider.BeaconData.MAJOR, b.getId2().toString());
+                        beaconInfo.put(Provider.BeaconData.MINOR, b.getId3().toString());
+                        beaconInfo.put(Provider.BeaconData.RSSI, b.getRssi());
+                        beaconInfo.put(Provider.BeaconData.TX_POWER, b.getTxPower());
                         Log.d(TAG, String.valueOf(beaconInfo));
-                        getApplicationContext().getContentResolver().insert(Provider.Beacon_Data.CONTENT_URI, beaconInfo);
+                        getApplicationContext().getContentResolver().insert(Provider.BeaconData.CONTENT_URI, beaconInfo);
                     }
                 }
             }
@@ -183,18 +191,6 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
         }
     }
 
-    public static AWAREBeaconObserver getSensorObserver() {
-        return beaconObserver;
-    }
-
-    public static void setBeaconObserver(AWAREBeaconObserver observer) {
-        beaconObserver = observer;
-    }
-
-    public interface AWAREBeaconObserver {
-        void onScanBeacon(List<Beacon> data);
-    }
-
     private void setDefaultSettings() {
         if (Aware.getSetting(this, Settings.PLUGIN_SCAN_BACKGROUND_PERIOD).length() == 0)
             Aware.setSetting(this, Settings.PLUGIN_SCAN_BACKGROUND_PERIOD, Settings.SCAN_BACKGROUND_PERIOD_DEFAULT);
@@ -216,5 +212,9 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
 
         if (Aware.getSetting(this, Settings.PLUGIN_BEACON_LAYOUT).length() == 0)
             Aware.setSetting(this, Settings.PLUGIN_BEACON_LAYOUT, Settings.BEACON_LAYOUT_DEFAULT);
+    }
+
+    public interface AWAREBeaconObserver {
+        void onScanBeacon(List<Beacon> data);
     }
 }

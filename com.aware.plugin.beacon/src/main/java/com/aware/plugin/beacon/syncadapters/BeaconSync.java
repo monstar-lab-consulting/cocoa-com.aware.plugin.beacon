@@ -12,7 +12,7 @@ import com.aware.syncadapters.AwareSyncAdapter;
  * Created by at-hangtran
  */
 
-public class Beacon_Sync extends Service {
+public class BeaconSync extends Service {
     private AwareSyncAdapter sSyncAdapter = null;
     private static final Object sSyncAdapterLock = new Object();
 
@@ -25,7 +25,7 @@ public class Beacon_Sync extends Service {
                 sSyncAdapter.init(
                         Provider.DATABASE_TABLES, Provider.TABLES_FIELDS,
                         new Uri[]{
-                                Provider.Beacon_Data.CONTENT_URI
+                                Provider.BeaconData.CONTENT_URI
                         }
                 );
             }

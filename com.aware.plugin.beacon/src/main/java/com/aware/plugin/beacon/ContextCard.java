@@ -22,8 +22,8 @@ import java.util.function.Consumer;
  */
 public class ContextCard implements IContextCard {
 
+    private final BeaconUpdater beaconUpdater = new BeaconUpdater();
     private TextView tvBeaconInfo;
-    private BeaconUpdater beaconUpdater = new BeaconUpdater();
 
     /**
      * Constructor for Stream reflection

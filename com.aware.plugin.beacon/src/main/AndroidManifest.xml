@@ -26,11 +26,6 @@
             android:exported="true"
             android:label="AWARE: Beacon" />
 
-        <activity
-            android:name="com.aware.plugin.beacon.Settings"
-            android:exported="true"
-            android:label="AWARE: Beacon" />
-
         <provider
             android:name="com.aware.plugin.beacon.Provider"
             android:authorities="${applicationId}.provider.beacon"
@@ -41,7 +36,7 @@
             android:writePermission="com.aware.WRITE_CONTEXT_DATA" />
 
         <service
-            android:name="com.aware.plugin.beacon.syncadapters.Beacon_Sync"
+            android:name="com.aware.plugin.beacon.syncadapters.BeaconSync"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />

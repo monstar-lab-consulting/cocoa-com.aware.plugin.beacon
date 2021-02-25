@@ -97,42 +97,42 @@ public class Settings extends AppCompatPreferenceActivity implements SharedPrefe
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference setting = findPreference(key);
 
-        if( setting.getKey().equals(STATUS_PLUGIN_BEACON) ) {
+        if (setting.getKey().equals(STATUS_PLUGIN_BEACON)) {
             Aware.setSetting(this, key, sharedPreferences.getBoolean(key, false));
             status.setChecked(sharedPreferences.getBoolean(key, false));
         }
 
-        if( setting.getKey().equals(PLUGIN_SCAN_BACKGROUND_PERIOD) ) {
+        if (setting.getKey().equals(PLUGIN_SCAN_BACKGROUND_PERIOD)) {
             Aware.setSetting(this, key, sharedPreferences.getString(key, SCAN_BACKGROUND_PERIOD_DEFAULT));
             scanBackgroundPeriod.setText(String.valueOf(sharedPreferences.getString(key, SCAN_BACKGROUND_PERIOD_DEFAULT)));
         }
 
-        if( setting.getKey().equals(PLUGIN_SCAN_BETWEEN_BACKGROUND_PERIOD) ) {
+        if (setting.getKey().equals(PLUGIN_SCAN_BETWEEN_BACKGROUND_PERIOD)) {
             Aware.setSetting(this, key, sharedPreferences.getString(key, SCAN_BETWEEN_BACKGROUND_PERIOD_DEFAULT));
             scanBetweenBackgroundPeriod.setText(String.valueOf(sharedPreferences.getString(key, SCAN_BETWEEN_BACKGROUND_PERIOD_DEFAULT)));
         }
 
-        if( setting.getKey().equals(PLUGIN_SCAN_BETWEEN_FOREGROUND_PERIOD) ) {
+        if (setting.getKey().equals(PLUGIN_SCAN_BETWEEN_FOREGROUND_PERIOD)) {
             Aware.setSetting(this, key, sharedPreferences.getString(key, SCAN_BETWEEN_FOREGROUND_PERIOD_DEFAULT));
             scanBetweenForegroundPeriod.setText(String.valueOf(sharedPreferences.getString(key, SCAN_BETWEEN_FOREGROUND_PERIOD_DEFAULT)));
         }
 
-        if( setting.getKey().equals(PLUGIN_BEACON_UDID) ) {
+        if (setting.getKey().equals(PLUGIN_BEACON_UDID)) {
             Aware.setSetting(this, key, sharedPreferences.getString(key, BEACON_UDID_DEFAULT));
             udid.setText(sharedPreferences.getString(key, BEACON_UDID_DEFAULT));
         }
 
-        if( setting.getKey().equals(PLUGIN_BEACON_LAYOUT) ) {
+        if (setting.getKey().equals(PLUGIN_BEACON_LAYOUT)) {
             Aware.setSetting(this, key, sharedPreferences.getString(key, BEACON_LAYOUT_DEFAULT));
             layout.setText(sharedPreferences.getString(key, BEACON_LAYOUT_DEFAULT));
         }
 
-        if( setting.getKey().equals(PLUGIN_BEACON_MAJOR) ) {
+        if (setting.getKey().equals(PLUGIN_BEACON_MAJOR)) {
             Aware.setSetting(this, key, sharedPreferences.getString(key, "0"));
             major.setText(sharedPreferences.getString(key, "0"));
         }
 
-        if( setting.getKey().equals(PLUGIN_BEACON_MINOR) ) {
+        if (setting.getKey().equals(PLUGIN_BEACON_MINOR)) {
             Aware.setSetting(this, key, sharedPreferences.getString(key, "0"));
             minor.setText(sharedPreferences.getString(key, "0"));
         }
