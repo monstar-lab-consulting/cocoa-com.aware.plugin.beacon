@@ -148,7 +148,8 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                Log.d(TAG, "Found " + beacons.size() + " beacon" + (beacons.size() <= 1 ? "" : "s") + ":");
+                if (DEBUG)
+                    Log.d(TAG, "Found " + beacons.size() + " beacon" + (beacons.size() <= 1 ? "" : "s") + ":");
                 if (Plugin.getSensorObserver() != null)
                     Plugin.getSensorObserver().onScanBeacon((List<Beacon>) beacons);
 
@@ -162,7 +163,7 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
                         beaconInfo.put(Provider.BeaconData.MINOR, b.getId3().toString());
                         beaconInfo.put(Provider.BeaconData.RSSI, b.getRssi());
                         beaconInfo.put(Provider.BeaconData.TX_POWER, b.getTxPower());
-                        Log.d(TAG, String.valueOf(beaconInfo));
+                        if (DEBUG) Log.d(TAG, String.valueOf(beaconInfo));
                         getApplicationContext().getContentResolver().insert(Provider.BeaconData.CONTENT_URI, beaconInfo);
                     }
                 }
