@@ -25,7 +25,7 @@ public class Beacon_Sync extends Service {
                 sSyncAdapter.init(
                         Provider.DATABASE_TABLES, Provider.TABLES_FIELDS,
                         new Uri[]{
-                                Provider.Beacon_Data.CONTENT_URI
+                                Provider.BeaconData.CONTENT_URI
                         }
                 );
             }
