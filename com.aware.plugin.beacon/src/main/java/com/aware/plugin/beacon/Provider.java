@@ -47,7 +47,7 @@ public class Provider extends ContentProvider {
      * Provider authority: com.aware.plugin.beacon.provider.beacon
      */
     public static String AUTHORITY = "com.aware.plugin.beacon.provider.beacon";
-    private static UriMatcher uRIMatcher;
+    private static UriMatcher uriMatcher;
     private static HashMap<String, String> databaseMap;
     private static SQLiteDatabase database;
     private DatabaseHelper dbHelper;
@@ -74,9 +74,9 @@ public class Provider extends ContentProvider {
 
         AUTHORITY = getContext().getPackageName() + ".provider.beacon";
 
-        uRIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uRIMatcher.addURI(AUTHORITY, DATABASE_TABLES[0], URI_CHECK_SCAN);
-        uRIMatcher.addURI(AUTHORITY, DATABASE_TABLES[0] + "/#", URI_CHECK_SCAN_ID);
+        uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(AUTHORITY, DATABASE_TABLES[0], URI_CHECK_SCAN);
+        uriMatcher.addURI(AUTHORITY, DATABASE_TABLES[0] + "/#", URI_CHECK_SCAN_ID);
 
         databaseMap = new HashMap<>();
         databaseMap.put(BeaconData._ID, BeaconData._ID);
@@ -97,7 +97,7 @@ public class Provider extends ContentProvider {
         database.beginTransaction();
 
         int count;
-        switch (uRIMatcher.match(uri)) {
+        switch (uriMatcher.match(uri)) {
             case URI_CHECK_SCAN:
                 count = database.delete(DATABASE_TABLES[0], selection, selectionArgs);
                 break;
@@ -114,7 +114,7 @@ public class Provider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        switch (uRIMatcher.match(uri)) {
+        switch (uriMatcher.match(uri)) {
             case URI_CHECK_SCAN:
                 return BeaconData.CONTENT_TYPE;
             case URI_CHECK_SCAN_ID:
@@ -133,17 +133,17 @@ public class Provider extends ContentProvider {
 
         database.beginTransaction();
 
-        switch (uRIMatcher.match(uri)) {
+        switch (uriMatcher.match(uri)) {
             case URI_CHECK_SCAN:
-                long beacon_id = database.insertWithOnConflict(DATABASE_TABLES[0], BeaconData.DEVICE_ID, values, SQLiteDatabase.CONFLICT_IGNORE);
-                if (beacon_id > 0) {
-                    Uri new_uri = ContentUris.withAppendedId(
+                long beaconId = database.insertWithOnConflict(DATABASE_TABLES[0], BeaconData.DEVICE_ID, values, SQLiteDatabase.CONFLICT_IGNORE);
+                if (beaconId > 0) {
+                    Uri newUri = ContentUris.withAppendedId(
                             BeaconData.CONTENT_URI,
-                            beacon_id);
-                    getContext().getContentResolver().notifyChange(new_uri, null, false);
+                            beaconId);
+                    getContext().getContentResolver().notifyChange(newUri, null, false);
                     database.setTransactionSuccessful();
                     database.endTransaction();
-                    return new_uri;
+                    return newUri;
                 }
                 database.endTransaction();
                 throw new SQLException("Failed to insert row into " + uri);
@@ -159,7 +159,7 @@ public class Provider extends ContentProvider {
         initialiseDatabase();
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        switch (uRIMatcher.match(uri)) {
+        switch (uriMatcher.match(uri)) {
             case URI_CHECK_SCAN:
                 qb.setTables(DATABASE_TABLES[0]);
                 qb.setProjectionMap(databaseMap);
@@ -189,7 +189,7 @@ public class Provider extends ContentProvider {
         database.beginTransaction();
 
         int count;
-        switch (uRIMatcher.match(uri)) {
+        switch (uriMatcher.match(uri)) {
             case URI_CHECK_SCAN:
                 count = database.update(DATABASE_TABLES[0], values, selection,
                         selectionArgs);

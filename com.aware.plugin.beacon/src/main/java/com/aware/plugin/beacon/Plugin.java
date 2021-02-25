@@ -111,15 +111,15 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
             }
             setDefaultSettings();
             if (Aware.isStudy(this)) {
-                Account aware_account = Aware.getAWAREAccount(getApplicationContext());
+                Account awareAccount = Aware.getAWAREAccount(getApplicationContext());
                 String authority = Provider.getAuthority(getApplicationContext());
                 long frequency = Long.parseLong(Aware.getSetting(this, Aware_Preferences.FREQUENCY_WEBSERVICE)) * 60;
 
-                ContentResolver.setIsSyncable(aware_account, authority, 1);
-                ContentResolver.setSyncAutomatically(aware_account, authority, true);
+                ContentResolver.setIsSyncable(awareAccount, authority, 1);
+                ContentResolver.setSyncAutomatically(awareAccount, authority, true);
                 SyncRequest request = new SyncRequest.Builder()
                         .syncPeriodic(frequency, frequency / 3)
-                        .setSyncAdapter(aware_account, authority)
+                        .setSyncAdapter(awareAccount, authority)
                         .setExtras(new Bundle()).build();
                 ContentResolver.requestSync(request);
             }
