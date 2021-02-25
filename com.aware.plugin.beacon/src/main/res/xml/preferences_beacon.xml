@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="plugin_beacon"
+    android:title="@string/app_name">
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="status_plugin_beacon"
+        android:persistent="true"
+        android:summary="Activate/deactivate plugin"
+        android:title="Detect beacon" />
+
+    <EditTextPreference
+        android:defaultValue="1100"
+        android:inputType="number"
+        android:key="plugin_scan_background_period"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Duration in milliseconds of each Bluetooth LE scan cycle to look for beacons. Default is 1100."
+        android:title="Scan background period" />
+
+    <EditTextPreference
+        android:defaultValue="0"
+        android:inputType="number"
+        android:key="plugin_scan_between_background_period"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Duration in milliseconds spent not scanning between each Bluetooth LE scan cycle when no ranging/monitoring clients are in the foreground. Default is 0."
+        android:title="Scan between background period" />
+
+    <EditTextPreference
+        android:defaultValue="2000"
+        android:inputType="number"
+        android:key="plugin_scan_between_foreground_period"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Duration in milliseconds between each Bluetooth LE scan cycle to look for beacons in the foreground. Default is 2000."
+        android:title="Scan between foreground period" />
+
+    <EditTextPreference
+        android:defaultValue="b9407f30-f5f8-466e-aff9-25556b57fe6d"
+        android:inputType="text"
+        android:key="plugin_beacon_udid"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Beacon udid default is b9407f30-f5f8-466e-aff9-25556b57fe6d"
+        android:title="Beacon udid" />
+
+    <EditTextPreference
+        android:defaultValue="m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"
+        android:inputType="text"
+        android:key="plugin_beacon_layout"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Beacon layout default is iBeacon"
+        android:title="Beacon layout" />
+
+    <EditTextPreference
+        android:defaultValue="0"
+        android:inputType="number"
+        android:key="plugin_beacon_major"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Beacon major default is 0"
+        android:title="Beacon major" />
+
+    <EditTextPreference
+        android:defaultValue="0"
+        android:inputType="number"
+        android:key="plugin_beacon_minor"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Beacon minor default is 0"
+        android:title="Beacon minor" />
+</PreferenceScreen>

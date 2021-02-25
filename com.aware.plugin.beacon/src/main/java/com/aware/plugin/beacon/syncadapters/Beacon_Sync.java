@@ -13,8 +13,8 @@ import com.aware.syncadapters.AwareSyncAdapter;
  */
 
 public class Beacon_Sync extends Service {
-    private static final Object sSyncAdapterLock = new Object();
     private AwareSyncAdapter sSyncAdapter = null;
+    private static final Object sSyncAdapterLock = new Object();
 
     @Override
     public void onCreate() {
