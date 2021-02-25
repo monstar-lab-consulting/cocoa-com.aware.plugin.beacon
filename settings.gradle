@@ -1,2 +1,1 @@
-include ':app'
-rootProject.name = "My Application"
+include ':com.aware.plugin.beacon', ':com.aware.plugin.beacon.lib'
