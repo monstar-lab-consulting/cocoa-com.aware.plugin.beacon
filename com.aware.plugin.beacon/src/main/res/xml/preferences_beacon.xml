@@ -34,7 +34,7 @@
         android:key="plugin_scan_between_foreground_period"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="Duration in milliseconds between each Bluetooth LE scan cycle to look for beacons in foreground. Default is 2000."
+        android:summary="Duration in milliseconds between each Bluetooth LE scan cycle to look for beacons in the foreground. Default is 2000."
         android:title="Scan between foreground period" />
 
     <EditTextPreference
@@ -52,7 +52,7 @@
         android:key="plugin_beacon_layout"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="Beacon layout default is ibeacon"
+        android:summary="Beacon layout default is iBeacon"
         android:title="Beacon layout" />
 
     <EditTextPreference

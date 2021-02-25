@@ -12,9 +12,9 @@ import com.aware.syncadapters.AwareSyncAdapter;
  * Created by at-hangtran
  */
 
-public class Beacon_Sync extends Service {
-    private static final Object sSyncAdapterLock = new Object();
+public class BeaconSync extends Service {
     private AwareSyncAdapter sSyncAdapter = null;
+    private static final Object sSyncAdapterLock = new Object();
 
     @Override
     public void onCreate() {
