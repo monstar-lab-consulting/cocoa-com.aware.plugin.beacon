@@ -2,17 +2,28 @@ package com.aware.plugin.beacon;
 
 import android.Manifest;
 import android.accounts.Account;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SyncRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
+
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
+import com.aware.Bluetooth;
 import com.aware.utils.Aware_Plugin;
 
 import org.altbeacon.beacon.Beacon;
@@ -36,9 +47,14 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
 
     public static final String ACTION_AWARE_PLUGIN_SCAN_START = "ACTION_AWARE_PLUGIN_SCAN_START";
     public static final String ACTION_AWARE_PLUGIN_SCAN_STOP = "ACTION_AWARE_PLUGIN_SCAN_STOP";
+    private static final String ACTION_AWARE_ENABLE_BT = "ACTION_AWARE_ENABLE_BT";
     public static boolean IN_SCAN = false;
     public static ContextProducer contextProducer;
     private static AWAREBeaconObserver beaconObserver;
+    private static NotificationManager notificationManager = null;
+    private static Intent enableBluetoothIntent = null;
+    private static BluetoothAdapter bluetoothAdapter;
+    private final BluetoothBroadcaster bluetoothMonitor = new BluetoothBroadcaster();
     private BeaconManager beaconManager;
 
     public static AWAREBeaconObserver getSensorObserver() {
@@ -54,6 +70,13 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
         super.onCreate();
         AUTHORITY = Provider.getAuthority(this);
         TAG = "AWARE::Beacon";
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        bluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(bluetoothMonitor, filter);
+        enableBluetoothIntent = new Intent(this, Bluetooth.class);
+        enableBluetoothIntent.putExtra("action", ACTION_AWARE_ENABLE_BT);
 
         //Any active plugin/sensor shares its overall context using broadcasts
         CONTEXT_PRODUCER = new ContextProducer() {
@@ -101,6 +124,20 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
             //Check if the user has toggled the debug messages
             DEBUG = Aware.getSetting(this, Aware_Preferences.DEBUG_FLAG).equals("true");
 
+            if (intent != null && intent.hasExtra("action") && intent.getStringExtra("action").equalsIgnoreCase(ACTION_AWARE_ENABLE_BT)) {
+                Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                enableBT.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(enableBT);
+            }
+            if (bluetoothAdapter == null) {
+                if (Aware.DEBUG) Log.w(TAG, "No bluetooth is detected on this device");
+                stopSelf();
+            } else {
+                if (!bluetoothAdapter.isEnabled()) {
+                    notifyMissingBluetooth(getApplicationContext(), false);
+                }
+            }
+
             if (Aware.getSetting(getApplicationContext(), Settings.STATUS_PLUGIN_BEACON).length() == 0) {
                 Aware.setSetting(getApplicationContext(), Settings.STATUS_PLUGIN_BEACON, true);
             } else {
@@ -132,6 +169,10 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
     public void onDestroy() {
         super.onDestroy();
         beaconManager.unbind(this);
+        unregisterReceiver(bluetoothMonitor);
+        if (bluetoothAdapter != null) {
+            notificationManager.cancel(123);
+        }
         ContentResolver.setSyncAutomatically(Aware.getAWAREAccount(this), Provider.getAuthority(this), false);
         ContentResolver.removePeriodicSync(
                 Aware.getAWAREAccount(this),
@@ -217,5 +258,52 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
 
     public interface AWAREBeaconObserver {
         void onScanBeacon(List<Beacon> data);
+    }
+
+    private void notifyMissingBluetooth(Context c, boolean dismiss) {
+        if (!dismiss) {
+            //Remind the user that we need Bluetooth on for data collection
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(c, Aware.AWARE_NOTIFICATION_CHANNEL_GENERAL)
+                    .setSmallIcon(com.aware.R.drawable.ic_stat_aware_accessibility)
+                    .setContentTitle(getApplicationContext().getResources().getString(R.string.bluetooth_needed_notification_title))
+                    .setContentText(getApplicationContext().getResources().getString(R.string.bluetooth_needed_notification_text))
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setOnlyAlertOnce(true)
+                    .setAutoCancel(true)
+                    .setContentIntent(PendingIntent.getService(c, 123, enableBluetoothIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+            builder = Aware.setNotificationProperties(builder, Aware.AWARE_NOTIFICATION_IMPORTANCE_GENERAL);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                builder.setChannelId(Aware.AWARE_NOTIFICATION_CHANNEL_GENERAL);
+
+            try {
+                notificationManager.notify(123, builder.build());
+            } catch (NullPointerException e) {
+                if (Aware.DEBUG) Log.d(Aware.TAG, "Notification exception: " + e);
+            }
+        } else {
+            try {
+                notificationManager.cancel(123);
+            } catch (NullPointerException e) {
+                if (Aware.DEBUG) Log.d(Aware.TAG, "Notification exception: " + e);
+            }
+        }
+    }
+
+    public class BluetoothBroadcaster extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
+                        == BluetoothAdapter.STATE_OFF) {
+                    notifyMissingBluetooth(context.getApplicationContext(), false);
+
+                } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
+                        == BluetoothAdapter.STATE_ON) {
+                    notifyMissingBluetooth(context.getApplicationContext(), true);
+                }
+            }
+        }
     }
 }
