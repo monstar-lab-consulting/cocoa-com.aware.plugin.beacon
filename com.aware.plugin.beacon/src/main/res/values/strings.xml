@@ -1,3 +1,5 @@
 <resources>
     <string name="plugin_beacon">AWARE: Beacon</string>
+    <string name="bluetooth_needed_notification_title">AWARE: Bluetooth needed.</string>
+    <string name="bluetooth_needed_notification_text">Tap to enable Bluetooth for nearby scanning.</string>
 </resources>
