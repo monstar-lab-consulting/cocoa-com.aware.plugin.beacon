@@ -2,4 +2,22 @@
     <string name="plugin_beacon">AWARE: Beacon</string>
     <string name="bluetooth_needed_notification_title">AWARE: Bluetooth needed.</string>
     <string name="bluetooth_needed_notification_text">Tap to enable Bluetooth for nearby scanning.</string>
+    <!-- detected beacon properties -->
+    <string name="mv_text_rssi" translatable="false">RSSI</string>
+    <string name="mv_text_rssi_unit">dBm</string>
+    <string name="mv_text_txpower" translatable="false">TX</string>
+    <string name="mv_text_distance_unit">m</string>
+    <string name="mv_text_uuid" translatable="false">UUID</string>
+    <string name="mv_text_major" translatable="false">Major</string>
+    <string name="mv_text_minor" translatable="false">Minor</string>
+    <string name="mv_text_distance">Distance</string>
+    <string name="mv_text_vendor">Vendor</string>
+    <string name="mv_text_name">Bluetooth Name</string>
+    <string name="mv_text_url" translatable="false">URL</string>
+    <string name="mv_text_instance" translatable="false">Instance</string>
+    <string name="mv_text_namespace" translatable="false">Namespace</string>
+    <!-- enums -->
+    <string name="proximity_immediate">Immediate</string>
+    <string name="proximity_near">Near</string>
+    <string name="proximity_far">Far</string>
 </resources>
