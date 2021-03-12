@@ -21,6 +21,7 @@ public class Settings extends AppCompatPreferenceActivity implements SharedPrefe
     public static final String PLUGIN_BEACON_MAJOR = "plugin_beacon_major";
     public static final String PLUGIN_BEACON_MINOR = "plugin_beacon_minor";
     public static final String PLUGIN_BEACON_LAYOUT = "plugin_beacon_layout";
+    public static final String PLUGIN_BEACON_WORKING_TIME = "plugin_beacon_working_time";
 
     public static final String SCAN_BACKGROUND_PERIOD_DEFAULT = "1100";
     public static final String SCAN_BETWEEN_BACKGROUND_PERIOD_DEFAULT = "0";
@@ -30,7 +31,7 @@ public class Settings extends AppCompatPreferenceActivity implements SharedPrefe
 
     //Plugin settings UI elements
     private static CheckBoxPreference status;
-    private static EditTextPreference scanBackgroundPeriod, scanBetweenBackgroundPeriod, scanBetweenForegroundPeriod, udid, layout, major, minor;
+    private static EditTextPreference scanBackgroundPeriod, scanBetweenBackgroundPeriod, scanBetweenForegroundPeriod, udid, layout, major, minor, workingTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,12 @@ public class Settings extends AppCompatPreferenceActivity implements SharedPrefe
             Aware.setSetting(this, PLUGIN_BEACON_MINOR, 0);
         }
         minor.setText(Aware.getSetting(this, PLUGIN_BEACON_MINOR));
+
+        workingTime = (EditTextPreference) findPreference(PLUGIN_BEACON_WORKING_TIME);
+        if (Aware.getSetting(this, PLUGIN_BEACON_WORKING_TIME).length() == 0) {
+            Aware.setSetting(this, PLUGIN_BEACON_WORKING_TIME, getString(R.string.default_working_time_json));
+        }
+        workingTime.setText(Aware.getSetting(this, PLUGIN_BEACON_WORKING_TIME));
     }
 
     @Override
@@ -135,6 +142,11 @@ public class Settings extends AppCompatPreferenceActivity implements SharedPrefe
         if (setting.getKey().equals(PLUGIN_BEACON_MINOR)) {
             Aware.setSetting(this, key, sharedPreferences.getString(key, "0"));
             minor.setText(sharedPreferences.getString(key, "0"));
+        }
+
+        if (setting.getKey().equals(PLUGIN_BEACON_WORKING_TIME)) {
+            Aware.setSetting(this, key, sharedPreferences.getString(key, getString(R.string.default_working_time_json)));
+            workingTime.setText(sharedPreferences.getString(key, getString(R.string.default_working_time_json)));
         }
 
         if (Aware.getSetting(this, STATUS_PLUGIN_BEACON).equals("true")) {
