@@ -2,5 +2,5 @@
     <string name="plugin_beacon">AWARE: Beacon</string>
     <string name="bluetooth_needed_notification_title">AWARE: Bluetooth needed.</string>
     <string name="bluetooth_needed_notification_text">Tap to enable Bluetooth for nearby scanning.</string>
-    <string name="default_working_time_json">{"working_time":[{"from":"00:00","until":"08:00","type":"range","value":"2"},{"from":"08:00","until":"12:00","type":"direct","value":"13:00"},{"from":"12:00","until":"17:00","type":"range","value":"3"},{"from":"17:00","until":"24:00","type":"range","value":"2"}]}</string>
+    <string name="default_working_time_json">{\"working_time\":[{\"from\":\"00:00\",\"until\":\"08:00\",\"type\":\"range\",\"value\":\"2\"},{\"from\":\"08:00\",\"until\":\"11:00\",\"type\":\"direct\",\"value\":\"13:00\"},{\"from\":\"11:00\",\"until\":\"13:00\",\"type\":\"range\",\"value\":\"2\"},{\"from\":\"13:00\",\"until\":\"17:00\",\"type\":\"direct\",\"value\":\"18:00\"},{\"from\":\"17:00\",\"until\":\"24:00\",\"type\":\"range\",\"value\":\"2\"}]}</string>
 </resources>
