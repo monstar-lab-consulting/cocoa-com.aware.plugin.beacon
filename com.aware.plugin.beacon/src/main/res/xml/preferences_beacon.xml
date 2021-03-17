@@ -72,4 +72,13 @@
         android:singleLine="true"
         android:summary="Beacon minor default is 0"
         android:title="Beacon minor" />
+
+    <EditTextPreference
+        android:defaultValue="@string/default_working_time_json"
+        android:inputType="text"
+        android:key="plugin_beacon_working_time"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Setting working time in Json format."
+        android:title="Working time" />
 </PreferenceScreen>
