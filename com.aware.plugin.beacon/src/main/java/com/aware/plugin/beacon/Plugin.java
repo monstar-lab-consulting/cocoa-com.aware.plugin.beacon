@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SyncRequest;
+import android.database.sqlite.SQLiteDiskIOException;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -108,9 +109,10 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
         beaconManager.getBeaconParsers().add(new BeaconParser()
                 .setBeaconLayout(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_BEACON_LAYOUT)));
         beaconManager.setEnableScheduledScanJobs(false);
-        beaconManager.setBackgroundScanPeriod(Long.parseLong(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_SCAN_BACKGROUND_PERIOD)));
-        beaconManager.setBackgroundBetweenScanPeriod(Long.parseLong(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_SCAN_BETWEEN_BACKGROUND_PERIOD)));
-        beaconManager.setForegroundBetweenScanPeriod(Long.parseLong(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_SCAN_BETWEEN_FOREGROUND_PERIOD)));
+        beaconManager.setBackgroundScanPeriod(Long.parseLong(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_SCAN_PERIOD)));
+        beaconManager.setForegroundScanPeriod(Long.parseLong(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_SCAN_PERIOD)));
+        beaconManager.setBackgroundBetweenScanPeriod(Long.parseLong(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_SCAN_BETWEEN_PERIOD)));
+        beaconManager.setForegroundBetweenScanPeriod(Long.parseLong(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_SCAN_BETWEEN_PERIOD)));
         beaconManager.bind(this);
     }
 
@@ -204,53 +206,43 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
                         beaconInfo.put(Provider.BeaconData.MINOR, b.getId3().toString());
                         beaconInfo.put(Provider.BeaconData.RSSI, b.getRssi());
                         beaconInfo.put(Provider.BeaconData.TX_POWER, b.getTxPower());
-                        if (DEBUG) Log.d(TAG, String.valueOf(beaconInfo));
-                        getApplicationContext().getContentResolver().insert(Provider.BeaconData.CONTENT_URI, beaconInfo);
+                        try {
+                            getApplicationContext().getContentResolver().insert(Provider.BeaconData.CONTENT_URI, beaconInfo);
+                        } catch (SQLiteDiskIOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         });
         try {
+            String uuid = Aware.getSetting(getApplicationContext(), Settings.PLUGIN_BEACON_UUID);
             String major = Aware.getSetting(getApplicationContext(), Settings.PLUGIN_BEACON_MAJOR);
             String minor = Aware.getSetting(getApplicationContext(), Settings.PLUGIN_BEACON_MINOR);
-            Identifier majorIdentifier;
-            Identifier minorIdentifier;
-            if (major.equals("0")) {
-                majorIdentifier = null;
-            } else {
-                majorIdentifier = Identifier.parse(major);
-            }
-            if (minor.equals("0")) {
-                minorIdentifier = null;
-            } else {
-                minorIdentifier = Identifier.parse(minor);
-            }
-            beaconManager.startRangingBeaconsInRegion(new Region("backgroundRegion", Identifier.parse(Aware.getSetting(getApplicationContext(), Settings.PLUGIN_BEACON_UDID)),
-                    majorIdentifier,
-                    minorIdentifier));
+            beaconManager.startRangingBeaconsInRegion(new Region("backgroundRegion",
+                    uuid.trim().equals("") ? null : Identifier.parse(uuid),
+                    major.trim().equals("") ? null : Identifier.parse(major),
+                    minor.trim().equals("") ? null : Identifier.parse(minor)));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
     private void setDefaultSettings() {
-        if (Aware.getSetting(this, Settings.PLUGIN_SCAN_BACKGROUND_PERIOD).length() == 0)
-            Aware.setSetting(this, Settings.PLUGIN_SCAN_BACKGROUND_PERIOD, Settings.SCAN_BACKGROUND_PERIOD_DEFAULT);
+        if (Aware.getSetting(this, Settings.PLUGIN_SCAN_PERIOD).length() == 0)
+            Aware.setSetting(this, Settings.PLUGIN_SCAN_PERIOD, Settings.SCAN_PERIOD_DEFAULT);
 
-        if (Aware.getSetting(this, Settings.PLUGIN_SCAN_BETWEEN_BACKGROUND_PERIOD).length() == 0)
-            Aware.setSetting(this, Settings.PLUGIN_SCAN_BETWEEN_BACKGROUND_PERIOD, Settings.SCAN_BETWEEN_BACKGROUND_PERIOD_DEFAULT);
+        if (Aware.getSetting(this, Settings.PLUGIN_SCAN_BETWEEN_PERIOD).length() == 0)
+            Aware.setSetting(this, Settings.PLUGIN_SCAN_BETWEEN_PERIOD, Settings.SCAN_BETWEEN_PERIOD_DEFAULT);
 
-        if (Aware.getSetting(this, Settings.PLUGIN_SCAN_BETWEEN_FOREGROUND_PERIOD).length() == 0)
-            Aware.setSetting(this, Settings.PLUGIN_SCAN_BETWEEN_FOREGROUND_PERIOD, Settings.SCAN_BETWEEN_FOREGROUND_PERIOD_DEFAULT);
-
-        if (Aware.getSetting(this, Settings.PLUGIN_BEACON_UDID).length() == 0)
-            Aware.setSetting(this, Settings.PLUGIN_BEACON_UDID, Settings.BEACON_UDID_DEFAULT);
+        if (Aware.getSetting(this, Settings.PLUGIN_BEACON_UUID).length() == 0)
+            Aware.setSetting(this, Settings.PLUGIN_BEACON_UUID, Settings.BEACON_UUID_DEFAULT);
 
         if (Aware.getSetting(this, Settings.PLUGIN_BEACON_MAJOR).length() == 0)
-            Aware.setSetting(this, Settings.PLUGIN_BEACON_MAJOR, 0);
+            Aware.setSetting(this, Settings.PLUGIN_BEACON_MAJOR, Settings.BEACON_MAJOR_DEFAULT);
 
         if (Aware.getSetting(this, Settings.PLUGIN_BEACON_MINOR).length() == 0)
-            Aware.setSetting(this, Settings.PLUGIN_BEACON_MINOR, 0);
+            Aware.setSetting(this, Settings.PLUGIN_BEACON_MINOR, Settings.BEACON_MINOR_DEFAULT);
 
         if (Aware.getSetting(this, Settings.PLUGIN_BEACON_LAYOUT).length() == 0)
             Aware.setSetting(this, Settings.PLUGIN_BEACON_LAYOUT, Settings.BEACON_LAYOUT_DEFAULT);

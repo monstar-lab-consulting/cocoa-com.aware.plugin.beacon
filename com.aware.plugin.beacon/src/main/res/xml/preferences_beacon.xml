@@ -8,43 +8,25 @@
         android:key="status_plugin_beacon"
         android:persistent="true"
         android:summary="Activate/deactivate plugin"
-        android:title="Detect beacon" />
+        android:title="Active" />
 
     <EditTextPreference
         android:defaultValue="1100"
         android:inputType="number"
-        android:key="plugin_scan_background_period"
+        android:key="plugin_scan_period"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:summary="Duration in milliseconds of each Bluetooth LE scan cycle to look for beacons. Default is 1100."
-        android:title="Scan background period" />
-
-    <EditTextPreference
-        android:defaultValue="0"
-        android:inputType="number"
-        android:key="plugin_scan_between_background_period"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="Duration in milliseconds spent not scanning between each Bluetooth LE scan cycle when no ranging/monitoring clients are in the foreground. Default is 0."
-        android:title="Scan between background period" />
+        android:title="Scan period" />
 
     <EditTextPreference
         android:defaultValue="2000"
         android:inputType="number"
-        android:key="plugin_scan_between_foreground_period"
+        android:key="plugin_scan_between_period"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="Duration in milliseconds between each Bluetooth LE scan cycle to look for beacons in the foreground. Default is 2000."
-        android:title="Scan between foreground period" />
-
-    <EditTextPreference
-        android:defaultValue="b9407f30-f5f8-466e-aff9-25556b57fe6d"
-        android:inputType="text"
-        android:key="plugin_beacon_udid"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="Beacon udid default is b9407f30-f5f8-466e-aff9-25556b57fe6d"
-        android:title="Beacon udid" />
+        android:summary="Duration in milliseconds spent not scanning between each Bluetooth LE scan cycle. Default is 2000."
+        android:title="Scan between period" />
 
     <EditTextPreference
         android:defaultValue="m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"
@@ -52,25 +34,34 @@
         android:key="plugin_beacon_layout"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="Beacon layout default is iBeacon"
+        android:summary="Beacon layout default is iBeacon."
         android:title="Beacon layout" />
 
     <EditTextPreference
-        android:defaultValue="0"
+        android:defaultValue=""
+        android:inputType="text"
+        android:key="plugin_beacon_uuid"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Filter beacon by uuid. Default not filter."
+        android:title="Beacon uuid" />
+
+    <EditTextPreference
+        android:defaultValue=""
         android:inputType="number"
         android:key="plugin_beacon_major"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="Beacon major default is 0"
+        android:summary="Filter beacon by major. Default not filter."
         android:title="Beacon major" />
 
     <EditTextPreference
-        android:defaultValue="0"
+        android:defaultValue=""
         android:inputType="number"
         android:key="plugin_beacon_minor"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="Beacon minor default is 0"
+        android:summary="Filter beacon by minor. Default not filter."
         android:title="Beacon minor" />
 
     <EditTextPreference
@@ -81,4 +72,49 @@
         android:singleLine="true"
         android:summary="Setting working time in Json format."
         android:title="Working time" />
+
+    <EditTextPreference
+        android:defaultValue="15"
+        android:inputType="number"
+        android:key="plugin_number_contact_alert"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Setting folk bears contact alert threshold. Default is 15 contacts."
+        android:title="Number Contact Alert" />
+
+    <EditTextPreference
+        android:defaultValue="600000"
+        android:inputType="number"
+        android:key="plugin_get_positives_interval"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Setting get positives from server interval. Default is 10 minutes."
+        android:title="Get positives interval" />
+
+    <EditTextPreference
+        android:defaultValue="300000"
+        android:inputType="number"
+        android:key="plugin_contact_continuation_interval"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Setting contact timeout. If time between 2 detection is greater than config, the contact will be ended. Default is 5 minutes."
+        android:title="Contact continuation interval" />
+
+    <EditTextPreference
+        android:defaultValue="600000"
+        android:inputType="number"
+        android:key="plugin_contact_density_interval"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Setting minimum duration of 1 contact. Default is 10 minutes."
+        android:title="Contact density interval" />
+
+    <EditTextPreference
+        android:defaultValue="2021-01-01 12:00:00"
+        android:inputType="text"
+        android:key="plugin_date_created"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="Date created of config file."
+        android:title="Date created" />
 </PreferenceScreen>
