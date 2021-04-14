@@ -206,7 +206,6 @@ public class Plugin extends Aware_Plugin implements BeaconConsumer {
                         beaconInfo.put(Provider.BeaconData.MINOR, b.getId3().toString());
                         beaconInfo.put(Provider.BeaconData.RSSI, b.getRssi());
                         beaconInfo.put(Provider.BeaconData.TX_POWER, b.getTxPower());
-                        if (DEBUG) Log.d(TAG, String.valueOf(beaconInfo));
                         try {
                             getApplicationContext().getContentResolver().insert(Provider.BeaconData.CONTENT_URI, beaconInfo);
                         } catch (SQLiteDiskIOException e) {
