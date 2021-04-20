@@ -27,8 +27,8 @@ public class Provider extends ContentProvider {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "folkbears.db";
     public static final String TABLE_NAME_BEACON = "plugin_beacon";
-    public static final String TABLE_NAME_DEEP_CONTACTS = "deep_contacts";
-    public static final String TABLE_NAME_TEMP_USER_ID = "temp_user_ids";
+    public static final String TABLE_NAME_DEEP_CONTACTS = "contact_event";
+    public static final String TABLE_NAME_TEMP_USER_ID = "infection_event";
     public static final String[] DATABASE_TABLES = {
             TABLE_NAME_BEACON,
             TABLE_NAME_DEEP_CONTACTS,
