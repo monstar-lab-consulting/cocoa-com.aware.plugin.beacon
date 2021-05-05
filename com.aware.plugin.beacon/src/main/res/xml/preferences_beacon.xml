@@ -38,12 +38,12 @@
         android:title="Beacon layout" />
 
     <EditTextPreference
-        android:defaultValue=""
+        android:defaultValue="e3ac7ed8-1017-c1e3-1e2a-34356e6dac51"
         android:inputType="text"
         android:key="plugin_beacon_uuid"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="Filter beacon by uuid. Default not filter."
+        android:summary="Filter beacon by uuid."
         android:title="Beacon uuid" />
 
     <EditTextPreference
