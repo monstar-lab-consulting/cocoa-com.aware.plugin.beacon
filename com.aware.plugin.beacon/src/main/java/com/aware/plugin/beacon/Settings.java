@@ -29,7 +29,7 @@ public class Settings extends AppCompatPreferenceActivity implements SharedPrefe
 
     public static final String SCAN_PERIOD_DEFAULT = "1100";
     public static final String SCAN_BETWEEN_PERIOD_DEFAULT = "2000";
-    public static final String BEACON_UUID_DEFAULT = "";
+    public static final String BEACON_UUID_DEFAULT = "e3ac7ed8-1017-c1e3-1e2a-34356e6dac51";
     public static final String BEACON_MAJOR_DEFAULT = "";
     public static final String BEACON_MINOR_DEFAULT = "";
     public static final String BEACON_LAYOUT_DEFAULT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
