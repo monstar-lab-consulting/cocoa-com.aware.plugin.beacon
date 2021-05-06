@@ -43,7 +43,7 @@ import java.util.List;
  * Created by at-trinhnguyen2
  */
 public class Plugin extends Aware_Plugin implements BeaconConsumer {
-    // Security snWEy2h0R5JStRsayR+6CVl9qh2KAmRDq2Q9l0lr
+    // snWEy2h0R5JStRsayR+6CVl9qh2KAmRDq2Q9l0lr
     public static final String PLUGIN_NAME = "com.aware.plugin.beacon";
 
     public static final String ACTION_AWARE_PLUGIN_SCAN_START = "ACTION_AWARE_PLUGIN_SCAN_START";
